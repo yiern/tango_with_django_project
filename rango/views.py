@@ -1,9 +1,17 @@
 from django.conf import settings
 from django.shortcuts import render
 from django.http import HttpResponse 
+from rango.models import Category,Page
+from rango.forms import CategoryForm
 
 def index(request):
+	#queries category class from model and order them by likes, first 5 
+	category_list = Category.objects.order_by('-likes')[:5] 
+	pages_list = Page.objects.order_by('-views')[:5]
+
 	context_dict = {'boldmessage' : 'Crunchy, creamy,cookie'}
+	context_dict['categories'] = category_list
+	context_dict['pages'] = pages_list
 	return render(request,'rango/index.html', context=context_dict)
 
 def about(request):
@@ -11,3 +19,27 @@ def about(request):
 	return render(request, 'rango/about.html',context=context_dict)
 	return HttpResponse("Rango says here is the about page")
 
+
+def show_category(request,category_name_slug):
+	context_dict={}
+	try:
+		category = Category.objects.get(slug = category_name_slug)
+
+		#Retrieve all related pages, the filter() will return a list of page objects 
+		#under name pages
+		pages = Page.objects.filter(category = category)
+
+		context_dict['category'] = category
+		context_dict['pages'] = pages
+	except Category.DoesNotExist:
+		context_dict['category'] = None
+		context_dict['pages'] = None
+	
+	return render(request, 'rango/category.html', context=context_dict)
+
+def add_category(request):
+	form = CategoryForm()
+
+	# A HTTPS post?
+	if request.method == 'POST':
+		form = CategoryForm(request.POST)
