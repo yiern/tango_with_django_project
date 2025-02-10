@@ -1,3 +1,45 @@
+{% extends 'rango/base.html' %}
+
+{% block title_block %}
+    <title>Homepage</title>
+    <h1> Hey there! </h1>
+{% endblock %}
+
+{% block body_block %}
+    <div>
+    Most liked category
+    {% if categories %}
+        <ul>
+        {% for category in categories %}
+            <li><a href = "/rango/category/{{category.slug}}">{{category.name}}</a></li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <strong>No categories</strong>
+    {% endif %}
+    </div>
+    <div>
+        Top viewed pages
+        <ul>
+            {% if pages %}
+                {% for page in pages %}
+                    <li><a href = "{{page.url}}">{{page.title}}</a></li>
+                {% endfor %}
+            {% else %}
+                <strong>No pages found </strong>
+            {% endif %}
+
+        </ul>
+    </div>
+
+
+
+{% endblock %}
+
+
+
+
+<!--
 <!DOCTYPE html>
 {% load staticfiles %}
 <html>
@@ -40,10 +82,13 @@
     
 
     <div>
-        <a href="/about">About</a><br />
+        <a href = "/rango/add_category">Add a new Category</a><br/>
+        <a href="{% url 'rango:about' %}">About</a><br />
         <img src="{% static 'images/rango.jpg' %}"
         alt="Picture of Rango" />
     </div>
 
   </body>
 </html>
+-->
+
