@@ -35,6 +35,9 @@ wp-config.php
 # htaccess
 /.htaccess
 
+# Ignore the SQLite database file
+db.sqlite3
+
 # All plugins
 #
 # Note: If you wish to whitelist plugins,
