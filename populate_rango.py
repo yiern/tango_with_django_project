@@ -3,7 +3,8 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE','tango_with_django_project.settin
 
 import django
 django.setup()
-from rango.models import Category, Page
+#from rango.models import Category, Page, Note, Students,Courses,EditedNotes
+from rango.models import *
 
 def populate():
     python_pages = [
@@ -41,6 +42,134 @@ def populate():
     for c in Category.objects.all():
         for p in Page.objects.filter(category=c):
             print(f'- {c}: {p}')
+
+    students = [
+    {'UserID': "2907132C", 'name': 'Ian', 'YearEnrolled': 2024, 'CurrentYearStudent': 2},
+    {'UserID': "2918234D", 'name': 'Sarah', 'YearEnrolled': 2023, 'CurrentYearStudent': 3},
+    {'UserID': "2929345E", 'name': 'James', 'YearEnrolled': 2022, 'CurrentYearStudent': 4},
+    {'UserID': "2930456F", 'name': 'Emily', 'YearEnrolled': 2024, 'CurrentYearStudent': 2},
+    {'UserID': "2941567G", 'name': 'Michael', 'YearEnrolled': 2021, 'CurrentYearStudent': 5},
+    {'UserID': "2952678H", 'name': 'Sophie', 'YearEnrolled': 2023, 'CurrentYearStudent': 3},
+    {'UserID': "2963789I", 'name': 'Daniel', 'YearEnrolled': 2022, 'CurrentYearStudent': 4},
+    {'UserID': "2974890J", 'name': 'Olivia', 'YearEnrolled': 2024, 'CurrentYearStudent': 2},
+    {'UserID': "2985901K", 'name': 'Ethan', 'YearEnrolled': 2023, 'CurrentYearStudent': 3},
+    {'UserID': "2996012L", 'name': 'Charlotte', 'YearEnrolled': 2021, 'CurrentYearStudent': 5}
+    ]
+
+
+    Courses = [
+    {"CourseID": "EDUC3078P", "CourseName": "Educational Elective 3"},
+    {"CourseID": "EDUC4084P", "CourseName": "Educational Elective 4"},
+    {"CourseID": "T2G-SCI", "CourseName": "Transition to Glasgow: Sciences"},
+    {"CourseID": "BIOL4A", "CourseName": "Advanced Biology A"},
+    {"CourseID": "BIOL4B", "CourseName": "Advanced Biology B"},
+    {"CourseID": "COMP1001", "CourseName": "Introduction to Computing Science"},
+    {"CourseID": "MATH1001", "CourseName": "Calculus 1"},
+    {"CourseID": "PHYS1001", "CourseName": "Physics 1"},
+    {"CourseID": "CHEM1001", "CourseName": "Fundamentals of Chemistry"},
+    {"CourseID": "PSYC1001", "CourseName": "Introduction to Psychology"}
+    ]
+
+    Enrolls = [
+    {"UserID": "2907132C", "CourseID": "BIOL4A"},
+    {"UserID": "2907132C", "CourseID": "MATH1001"},
+    {"UserID": "2918234D", "CourseID": "COMP1001"},
+    {"UserID": "2918234D", "CourseID": "PSYC1001"},
+    {"UserID": "2929345E", "CourseID": "T2G-SCI"},
+    {"UserID": "2929345E", "CourseID": "PHYS1001"},
+    {"UserID": "2930456F", "CourseID": "EDUC3078P"},
+    {"UserID": "2930456F", "CourseID": "EDUC4084P"},
+    {"UserID": "2941567G", "CourseID": "CHEM1001"},
+    {"UserID": "2941567G", "CourseID": "MATH1001"},
+    {"UserID": "2952678H", "CourseID": "PSYC1001"},
+    {"UserID": "2952678H", "CourseID": "BIOL4B"},
+    {"UserID": "2963789I", "CourseID": "PHYS1001"},
+    {"UserID": "2963789I", "CourseID": "BIOL4A"},
+    {"UserID": "2974890J", "CourseID": "EDUC3078P"},
+    {"UserID": "2974890J", "CourseID": "T2G-SCI"},
+    {"UserID": "2985901K", "CourseID": "BIOL4B"},
+    {"UserID": "2985901K", "CourseID": "CHEM1001"},
+    {"UserID": "2996012L", "CourseID": "COMP1001"},
+    {"UserID": "2996012L", "CourseID": "MATH1001"}
+    ]
+    
+    Notes = [
+    {"ID" : 1 ,"Owner": "2907132C", "CourseID": "BIOL4A", "Topics": "Evolution and Gene Pool", "file": "Documents/test1.docx"},
+    {"ID" : 2 ,"Owner": "2918234D", "CourseID": "COMP1001", "Topics": "Fundamentals of Python Programming", "file": "Documents/test2.docx"},
+    {"ID" : 3 ,"Owner": "2929345E", "CourseID": "MATH1001", "Topics": "Limits and Differentiation", "file": "Documents/test3.docx"},
+    {"ID" : 4 ,"Owner": "2930456F", "CourseID": "PHYS1001", "Topics": "Newton’s Laws of Motion", "file": "Documents/test4.docx"}
+    ]
+
+    edited_notes = [
+        {"CourseID" : "BIOL4A", "ID" : 1},
+        {"CourseID" : "COMP1001", "ID" : 2},
+        {"CourseID" : "MATH1001", "ID" : 3},
+        {"CourseID" : "PHYS1001", "ID" : 4}
+    ]
+
+
+    for student in students:
+        userID = student.get("UserID")
+        name = student.get("name")
+        yearEnrolled = student.get('YearEnrolled')
+        CurrentYear = student.get('CurrentYearStudent')
+
+        add_student(userID,name,yearEnrolled,CurrentYear)
+
+    for course in Courses:
+
+        courseID = course.get("CourseID")
+        CourseName = course.get("CourseName")
+
+        add_course(courseID,CourseName)
+    
+    for enroll in Enrolls:
+        userID = enroll.get('UserID')
+        CourseID = enroll.get('CourseID')
+
+        add_enroll(userID,CourseID)
+
+    for note in Notes:
+        Id = note.get("ID")
+        Owner = note.get("Owner")
+        CourseID = note.get("CourseID")
+        Topic = note.get("Topics")
+        file = note.get("file")
+
+        add_note(Id,Owner,CourseID,Topic,file)
+    
+        
+
+
+
+
+
+    
+
+
+def add_student(userID,name,yearEnrolled,CurrentYear):
+
+    s= Students.objects.get_or_create(UserID = userID, name = name, YearEnrolled = yearEnrolled, CurrentYearStudent = CurrentYear)
+    s.save()
+    return s
+
+def add_course(courseID,CourseName):
+    c =Courses.objects.get_or_create(courseID=courseID,CourseName = CourseName)
+    c.save()
+    return c
+
+def add_enroll(userID,CourseID):
+    e = Enrolls.objects.get_or_create(UserID = userID, CourseID = CourseID)
+    e.save()
+    return e
+
+def add_note(Id,Owner,CourseID,Topic,file):
+    n = Note.objects.get_or_create(ID = id, Owner = Owner, CourseID = CourseID, Topic = Topic, file = file, DateUploaded = datetime.date)
+    n.save()
+    return n
+
+
+
 
 def add_page(cat, title, url, views=0):
     p = Page.objects.get_or_create(category=cat, title=title)[0]

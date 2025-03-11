@@ -58,3 +58,33 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return self.user.username
+
+
+class Students(models.Model):
+    UserID = models.OneToOneField(User, on_delete=models.CASCADE)
+    Name = models.CharField(max_length=200)
+    YearEnrolled = models.DateField()
+    CurrentYearStudent = models.IntegerField(default= 1)
+
+class Courses(models.Model):
+    CourseID = models.CharField(primary_key= True, max_length=10)
+    CourseName = models.CharField(max_length=200)
+
+class Enrolls(models.Model):
+    UserID = models.ForeignKey(Students, on_delete=models.CASCADE)
+    CourseID = models.ForeignKey(Courses, on_delete= models.CASCADE)
+
+class Note(models.Model):
+    Owner = models.ForeignKey(Students, on_delete= models.CASCADE)
+    DateUploaded = models.DateTimeField(auto_now_add=True)
+    CourseID = models.ForeignKey(Courses)
+    Topics = models.CharField(max_length=200)
+    ID = models.AutoField(primary_key=True)
+    file = models.FileField(upload_to="Documents/")
+
+class EditedNotes(models.Model):
+    ID = models.AutoField(primary_key=True)
+    DateUploaded = models.DateField(auto_now_add=True)
+    CourseID = models.OneToOneField(Courses, on_delete=models.CASCADE)
+    OriginalNote = models.OneToOneField(Note, on_delete=models.CASCADE)
+

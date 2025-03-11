@@ -1,5 +1,5 @@
 from django import forms
-from rango.models import Page,Category
+from rango.models import Page,Category,Note
 from urllib.parse import quote
 from django.contrib.auth.models import User
 from rango.models import UserProfile
@@ -50,4 +50,14 @@ class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ('website','picture')
+
+class UploadNote(forms.ModelForm):
+    
+    CourseID = forms.CharField(max_length=max_length, help_text= "Enter your Course ID")
+    Topics = forms.CharField(max_length=max_length, help_text= "what's your note about?")
+    
+    class Meta:
+        model = Note
+        fields = ('file')
+        exclude = ('Owner', 'DateUploaded','ID')
 
