@@ -58,6 +58,6 @@ class UploadNote(forms.ModelForm):
     
     class Meta:
         model = Note
-        fields = ('file')
-        exclude = ('Owner', 'DateUploaded','ID')
+        fields = ('file',)
+        exclude = ('UserID', 'DateUploaded','ID')
 

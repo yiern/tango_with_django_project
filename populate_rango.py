@@ -138,18 +138,12 @@ def populate():
 
         add_note(Id,Owner,CourseID,Topic,file)
     
-        
-
-
-
-
-
     
 
 
 def add_student(userID,name,yearEnrolled,CurrentYear):
 
-    s= Students.objects.get_or_create(UserID = userID, name = name, YearEnrolled = yearEnrolled, CurrentYearStudent = CurrentYear)
+    s = Students.objects.get_or_create(UserID = userID, Name = name, YearEnrolled = yearEnrolled, CurrentYearStudent = CurrentYear)[0]
     s.save()
     return s
 
@@ -164,7 +158,10 @@ def add_enroll(userID,CourseID):
     return e
 
 def add_note(Id,Owner,CourseID,Topic,file):
-    n = Note.objects.get_or_create(ID = id, Owner = Owner, CourseID = CourseID, Topic = Topic, file = file, DateUploaded = datetime.date)
+    if Id is not None:
+        n = Note.objects.get_or_create(ID = Id, Owner = Owner, CourseID = CourseID, Topic = Topic, file = file, DateUploaded = datetime.date)
+    else:
+         n = Note.objects.get_or_create(Owner = Owner, CourseID = CourseID, Topic = Topic, file = file, DateUploaded = datetime.date)
     n.save()
     return n
 

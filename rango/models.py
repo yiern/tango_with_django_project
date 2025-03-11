@@ -61,9 +61,9 @@ class UserProfile(models.Model):
 
 
 class Students(models.Model):
-    UserID = models.OneToOneField(User, on_delete=models.CASCADE)
+    UserID = models.CharField(primary_key= True, max_length = 200)
     Name = models.CharField(max_length=200)
-    YearEnrolled = models.DateField()
+    YearEnrolled = models.IntegerField()
     CurrentYearStudent = models.IntegerField(default= 1)
 
 class Courses(models.Model):
@@ -75,9 +75,9 @@ class Enrolls(models.Model):
     CourseID = models.ForeignKey(Courses, on_delete= models.CASCADE)
 
 class Note(models.Model):
-    Owner = models.ForeignKey(Students, on_delete= models.CASCADE)
+    UserID = models.ForeignKey(Students, on_delete= models.CASCADE)
     DateUploaded = models.DateTimeField(auto_now_add=True)
-    CourseID = models.ForeignKey(Courses)
+    CourseID = models.ForeignKey(Courses, on_delete= models.CASCADE)
     Topics = models.CharField(max_length=200)
     ID = models.AutoField(primary_key=True)
     file = models.FileField(upload_to="Documents/")
@@ -85,6 +85,6 @@ class Note(models.Model):
 class EditedNotes(models.Model):
     ID = models.AutoField(primary_key=True)
     DateUploaded = models.DateField(auto_now_add=True)
-    CourseID = models.OneToOneField(Courses, on_delete=models.CASCADE)
-    OriginalNote = models.OneToOneField(Note, on_delete=models.CASCADE)
+    CourseID = models.ForeignKey(Courses, on_delete=models.CASCADE)
+    OriginalNote = models.ForeignKey(Note, on_delete=models.CASCADE)
 
