@@ -1,6 +1,6 @@
 import os
 os.environ.setdefault('DJANGO_SETTINGS_MODULE','tango_with_django_project.settings')
-
+from datetime import date
 import django
 django.setup()
 #from rango.models import Category, Page, Note, Students,Courses,EditedNotes
@@ -101,10 +101,10 @@ def populate():
     ]
 
     edited_notes = [
-        {"CourseID" : "BIOL4A", "ID" : 1},
-        {"CourseID" : "COMP1001", "ID" : 2},
-        {"CourseID" : "MATH1001", "ID" : 3},
-        {"CourseID" : "PHYS1001", "ID" : 4}
+        {"CourseID" : "BIOL4A", "ID" : 1, "File" : "Edited_Note/etest1.docx", "EditedID" : "2996012L"},
+        {"CourseID" : "COMP1001", "ID" : 2, "File" : "Edited_Note/etest2.docx", "EditedID" : "2929345E"},
+        {"CourseID" : "MATH1001", "ID" : 3, "File" : "Edited_Note/etest3.docx", "EditedID" : "2918234D"},
+        {"CourseID" : "PHYS1001", "ID" : 4, "File" : "Edited_Note/etest4.docx", "EditedID" : "2952678H"}
     ]
 
 
@@ -124,8 +124,8 @@ def populate():
         add_course(courseID,CourseName)
     
     for enroll in Enrolls:
-        userID = enroll.get('UserID')
-        CourseID = enroll.get('CourseID')
+        userID = enroll.get("UserID")
+        CourseID = enroll.get("CourseID")
 
         add_enroll(userID,CourseID)
 
@@ -138,6 +138,13 @@ def populate():
 
         add_note(Id,Owner,CourseID,Topic,file)
     
+    for edits in edited_notes:
+        NoteID = edits['ID']
+        CourseID = edits['CourseID']
+        file = edits['File']
+        EditedID = edits['EditedID']
+        add_edit(NoteID,CourseID,file,EditedID)
+    
     
 
 
@@ -148,23 +155,44 @@ def add_student(userID,name,yearEnrolled,CurrentYear):
     return s
 
 def add_course(courseID,CourseName):
-    c =Courses.objects.get_or_create(courseID=courseID,CourseName = CourseName)
+    c =Courses.objects.get_or_create(CourseID=courseID,CourseName = CourseName)[0]
     c.save()
     return c
 
 def add_enroll(userID,CourseID):
-    e = Enrolls.objects.get_or_create(UserID = userID, CourseID = CourseID)
+    student = Students.objects.get(UserID = userID)
+    course = Courses.objects.get(CourseID = CourseID)
+    e = Enrolls.objects.get_or_create(UserID = student, CourseID = course)[0]
     e.save()
     return e
 
 def add_note(Id,Owner,CourseID,Topic,file):
+    Owner = Students.objects.get(UserID = Owner)
+    CourseID = Courses.objects.get(CourseID = CourseID)
     if Id is not None:
-        n = Note.objects.get_or_create(ID = Id, Owner = Owner, CourseID = CourseID, Topic = Topic, file = file, DateUploaded = datetime.date)
+        n = Note.objects.update_or_create( 
+            UserID=Owner,  # Lookup field
+            CourseID=CourseID,  # Lookup field
+            defaults={
+                'Topics': Topic,
+                'file': file,
+                'DateUploaded': date.today().isoformat()
+            })[0]
     else:
-         n = Note.objects.get_or_create(Owner = Owner, CourseID = CourseID, Topic = Topic, file = file, DateUploaded = datetime.date)
+         n = Note.objects.get_or_create(UserID = Owner, CourseID = CourseID, Topics = Topic, file = file, DateUploaded = date.today().isoformat())[0]
     n.save()
     return n
 
+def add_edit(NoteID,CourseID,file, EditedID):
+
+    NoteID = Note.objects.get(NoteID = NoteID)
+    CourseID = Courses.objects.get(CourseID = CourseID)
+    EditedID = Students.objects.get(UserID = EditedID)
+    
+    e = EditedNotes.objects.get_or_create(UserID = EditedID, DateUploaded = date.today().isoformat(), CourseID = CourseID, NoteID = NoteID, file = file)[0]
+    e.save()
+
+    return e
 
 
 

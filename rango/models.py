@@ -61,7 +61,7 @@ class UserProfile(models.Model):
 
 
 class Students(models.Model):
-    UserID = models.CharField(primary_key= True, max_length = 200)
+    UserID = models.CharField(unique= True, max_length = 200, primary_key= True)
     Name = models.CharField(max_length=200)
     YearEnrolled = models.IntegerField()
     CurrentYearStudent = models.IntegerField(default= 1)
@@ -79,12 +79,14 @@ class Note(models.Model):
     DateUploaded = models.DateTimeField(auto_now_add=True)
     CourseID = models.ForeignKey(Courses, on_delete= models.CASCADE)
     Topics = models.CharField(max_length=200)
-    ID = models.AutoField(primary_key=True)
+    NoteID = models.AutoField(primary_key=True)
     file = models.FileField(upload_to="Documents/")
 
 class EditedNotes(models.Model):
-    ID = models.AutoField(primary_key=True)
+    EditedID = models.AutoField(primary_key=True)
+    UserID = models.ForeignKey(Students, on_delete=models.CASCADE)
     DateUploaded = models.DateField(auto_now_add=True)
     CourseID = models.ForeignKey(Courses, on_delete=models.CASCADE)
-    OriginalNote = models.ForeignKey(Note, on_delete=models.CASCADE)
+    NoteID = models.ForeignKey(Note, on_delete=models.CASCADE)
+    file = models.FileField(upload_to = "Edited_Note/", null= True)
 
